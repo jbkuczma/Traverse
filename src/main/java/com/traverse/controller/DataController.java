@@ -139,7 +139,7 @@ public class DataController {
      */
     @RequestMapping(value = "/audio/list", method = RequestMethod.GET, produces = "application/json")
     public String getAudioList(@RequestParam(value = "time", required = false) Long startingMillis, HttpServletResponse httpServletResponse) throws IOException {
-        return audioDatabase.list(5, startingMillis != null ? startingMillis : -1);
+        return audioDatabase.list(20, startingMillis != null ? startingMillis : -1);
     }
 
 }
