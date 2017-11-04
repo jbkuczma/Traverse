@@ -16,6 +16,7 @@ import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.CreateBucketRequest;
 import com.amazonaws.services.s3.model.GetBucketLocationRequest;
 import com.traverse.data.Audio;
+import com.traverse.data.Playlist;
 import com.traverse.data.User;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -38,6 +39,7 @@ public class DBClient {
             @Value("${cloud.dynamoDB_table_name_users}") String userTableName,
             @Value("${cloud.dynamoDB_table_name_audio}") String audioTableName,
             @Value("${cloud.dynamoDB_table_name_auth}") String authTableName,
+            @Value("${cloud.dynamoDB_table_name_playlists}") String playlistsTableName,
             @Value("${cloud.s3_bucket}") String bucketName) {
 
         AWSStaticCredentialsProvider credentialsProvider = new AWSStaticCredentialsProvider(new AWSCredentials() {
@@ -76,6 +78,7 @@ public class DBClient {
         createTable(userTableName, User.DB_IDENTIFIER_USER_ID, amazonDynamoDB, null);
         createAudioTable(audioTableName, amazonDynamoDB);
         createTable(authTableName, AuthDatabase.DB_IDENTIFIER_TOKEN, amazonDynamoDB, null); //set as null
+        createTable(playlistsTableName, Playlist.DB_IDENTIFIER_PLAYLIST_ID, amazonDynamoDB, null);
     }
 
     public DynamoDBMapper getMapper() {
