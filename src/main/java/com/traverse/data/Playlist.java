@@ -37,6 +37,10 @@ public class Playlist {
         this.playlistID = id;
     }
 
+    public String getPlaylistID() {
+        return playlistID;
+    }
+
     public void setPlaylistDescription(String description) {
         this.playlistDescription = description;
     }

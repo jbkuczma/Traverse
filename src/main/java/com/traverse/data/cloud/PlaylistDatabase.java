@@ -7,13 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.json.JSONObject;
+import com.traverse.data.User;
 
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.Random;
-/**
- * Playlist class does not exist right now
- */
 
 @Component
 public class PlaylistDatabase {
@@ -27,30 +23,41 @@ public class PlaylistDatabase {
         this.tableName = tableName;
     }
 
-    // POST create playlist
-    public String createPlaylist(String playlistName, String playlistDescription, String userID) {
+    /**
+     * @param playlistName - name of the created playlist
+     * @param playlistDescription - description of the created playlist
+     * @param user - User who created the playlist
+     */
+    public String createPlaylist(String playlistName, String playlistDescription, User user) {
         int playlistID = new Random().nextInt(100000) + 1; // playlist_id will be ranodm number between 1 and 100,000
+        String userID = user.getUserID(); // get id of provided user
+        user.addPlaylist(Integer.toString(playlistID)); // add created playlist by id to user's collection of created playlists
         String jsonData = new JSONObject()
                                 .put(Playlist.DB_IDENTIFIER_PLAYLIST_ID, playlistID)
                                 .put(Playlist.DB_IDENTIFIER_PLAYLIST_NAME, playlistName)
+                                .put(Playlist.DB_IDENTIFIER_PLAYLIST_DESCRIPTION, playlistDescription)
                                 .put(Playlist.DB_IDENTIFIER_PLAYLIST_CREATED_BY, userID)
                                 .toString();
         return jsonData;
     }
 
-    // GET playlist via playlist id
+    /**
+     * @param playlistID - id of the playlist to get from database
+     */
     public String getPlaylist(String playlistID) {
         Item playlist = dbClient.getDynamoDB().getTable(tableName).getItem(Playlist.DB_IDENTIFIER_PLAYLIST_ID, playlistID);
         return playlist.toJSON();
     }
 
-    // PUT add audio to playlist
+    /**
+     * @param playlistID - id of the playlist to add to
+     * @param audioID - id of audio to add to playlist
+     */
     public void addToPlaylist(String playlistID, String audioID) {
         String jsonData = new JSONObject()
                                 .put(Playlist.DB_IDENTIFIER_PLAYLIST_ID, playlistID)
                                 .put(Audio.DB_IDENTIFIER_AUDIO_ID, audioID)
                                 .toString();
-        // return dbClient.getDynamoDB().getTable(tableName).putItem(Item.fromJSON(jsonData)).toString();
         dbClient.getDynamoDB().getTable(tableName).putItem(Item.fromJSON(jsonData)).toString();        
     }
 }

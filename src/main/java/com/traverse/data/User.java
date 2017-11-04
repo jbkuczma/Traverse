@@ -29,7 +29,8 @@ public class User {
             DB_IDENTIFIER_REGISTER_TIME = "register_time",
             DB_IDENTIFIER_AUDIO_LIST= "audio_list",
             DB_IDENTIFIER_USERNAME = "username",
-            DB_IDENTIFIER_SOCIAL_MEDIA_ID = "social_media_id";
+            DB_IDENTIFIER_SOCIAL_MEDIA_ID = "social_media_id",
+            DB_IDENTIFIER_CREATED_PLAYLISTS = "created_playlists";
 
 
     private String username; //Unique identifier
@@ -37,6 +38,7 @@ public class User {
     private Long registerTime;
     private List<String> audioIdList;
     private String socialMediaID;
+    private List<String> createdPlaylists;
 
     public String getUserID() {
         return userID;
@@ -80,6 +82,17 @@ public class User {
         audioIdList.add(audio.getId());
     }
 
+    public List<String> getPlaylists() {
+        return createdPlaylists;
+    }
+
+    public void addPlaylist(String playlistID) {
+        if (createdPlaylists == null) {
+            createdPlaylists = new ArrayList<>();
+        }
+        createdPlaylists.add(playlistID);
+    }
+
     public String toJson(){
         return new JSONObject()
                 .put(DB_IDENTIFIER_USER_ID, userID)
@@ -87,6 +100,7 @@ public class User {
                 .put(DB_IDENTIFIER_AUDIO_LIST, audioIdList)
                 .put(DB_IDENTIFIER_USERNAME, username)
                 .put(DB_IDENTIFIER_SOCIAL_MEDIA_ID, socialMediaID)
+                .put(DB_IDENTIFIER_CREATED_PLAYLISTS, createdPlaylists)
                 .toString();
     }
 
